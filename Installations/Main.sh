@@ -1,11 +1,13 @@
+#parameter(java version)
 function install_java() {
+    version=$1
     if java --version 2>&1 | grep -q "openjdk"; then
         echo "Java is installed."
     else
         echo "Installing java"
     
         sudo apt update
-        sudo apt install openjdk-11-jdk
+        sudo apt install openjdk-$version-jdk
 
         if java --version 2>&1 | grep -q "openjdk"; then
             echo "Java is installed."
@@ -16,27 +18,31 @@ function install_java() {
     fi
 }
 
-
-
+#parameter(hadoop version)
 function install_hadoop(){
+    hadoopVersion=$1
     if which hadoop &>/dev/null; then
         echo "Hadoop is installed."
     else
         echo "Installing Hadoop"
         cd ~
-        wget https://archive.apache.org/dist/hadoop/common/hadoop-3.3.1/hadoop-3.3.1.tar.gz
-        tar -xzvf hadoop-3.3.1.tar.gz
-        sudo mv hadoop-3.3.1 /usr/local/hadoop
+        # wget https://archive.apache.org/dist/hadoop/common/$hadoopVersion/$hadoopVersion.tar.gz
+        tar -xzvf $hadoopVersion.tar.gz
+        sudo mv $hadoopVersion/usr/local/hadoop
         clear
         echo "Hadoop Installed Successfully"
     fi
 }
+#parameter(hadoop version)
 function set_path(){
+    hadoopVersion=$1
+    javaVersion=$2
+    versionOnly="${hadoopVersion#*-}"
 
     echo "Setting Up Hadoop Path ...."
-    echo "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" >> ~/.bashrc
-    echo 'export PATH=$PATH:/usr/lib/jvm/java-11-openjdk-amd64/bin' >> ~/.bashrc
-    echo 'export HADOOP_HOME=~/hadoop-3.3.1/' >> ~/.bashrc
+    echo "export JAVA_HOME=/usr/lib/jvm/java-$javaVersion-openjdk-amd64" >> ~/.bashrc
+    echo 'export PATH=$PATH:/usr/lib/jvm/java-'$javaVersion'-openjdk-amd64/bin' >> ~/.bashrc
+    echo 'export HADOOP_HOME=~/'$hadoopVersion'/' >> ~/.bashrc
     echo 'export PATH=$PATH:$HADOOP_HOME/bin' >> ~/.bashrc
     echo 'export PATH=$PATH:$HADOOP_HOME/sbin' >> ~/.bashrc
     echo 'export HADOOP_MAPRED_HOME=$HADOOP_HOME' >> ~/.bashrc
@@ -44,7 +50,7 @@ function set_path(){
     echo 'export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >> ~/.bashrc
     echo 'export HADOOP_COMMON_LIB_NATIVE_DIR=$HADOOP_HOME/lib/native' >> ~/.bashrc
     echo 'export HADOOP_OPTS="-Djava.library.path=$HADOOP_HOME/lib/native"' >> ~/.bashrc
-    echo 'export HADOOP_STREAMING=$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-3.3.1.jar' >> ~/.bashrc
+    echo 'export HADOOP_STREAMING=$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-'$versionOnly'.jar' >> ~/.bashrc
     echo 'export HADOOP_LOG_DIR=$HADOOP_HOME/logs' >> ~/.bashrc
     echo 'export PDSH_RCMD_TYPE=ssh' >> ~/.bashrc
 
@@ -53,12 +59,15 @@ function set_path(){
 
     source ~/.bashrc
 }
+#parameters (java verision)
 function set_configurations(){
 
+    javaVersion=$1
     echo "Setting Configuations"
 
-    echo "JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64" >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
+    echo "JAVA_HOME=/usr/lib/jvm/java-$javaVersion-openjdk-amd64" >> $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 
+    source ~/.bashrc
 
     # Core Site.xml
     echo "Altering Core site"
@@ -91,10 +100,12 @@ function format_node(){
 }
 
 # Main Method
+javaVersion="11"
+hadoopVersion="hadoop-3.3.1"
 
-install_java
-install_hadoop
-set_path
-set_configurations
+install_java $javaVersion
+install_hadoop $hadoopVersion
+set_path $hadoopVersion $javaVersion
+set_configurations $javaVersion
 setup_SSH
 format_node
