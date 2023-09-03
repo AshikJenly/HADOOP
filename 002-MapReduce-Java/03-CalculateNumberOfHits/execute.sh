@@ -1,14 +1,28 @@
+hdfs dfs -mkdir /user
+hdfs dfs -mkdir /user/mapreduce
+hdfs dfs -mkdir /user/mapreduce/ex03
+hdfs dfs -mkdir /user/mapreduce/ex03/input
+
+INPUT_FILE_NAME="NASA_access_log_Jul95"
+
+
+INPUT_PATH="/user/mapreduce/ex03/input/datas"
+OUTPUT_PATH="/user/mapreduce/ex03/output"
+DATA_SOURCE_PATH="./datas"
+MAIN_JAVA_FILE_NAME="CountHits.java"
+MAIN_CLASS_NAME="CountHits"
+JAR_NAME="Count.jar"
+
+
+hdfs dfs -put $DATA_SOURCE_PATH  $INPUT_PATH
 rm *.class
-# javac CountHits.java
-javac CountHits.java
-
 rm *.jar
-jar -cvf count.jar *.class
-hdfs dfs -rm -r /user/counthits/output
+javac $MAIN_JAVA_FILE_NAME
+jar -cvf $JAR_NAME *.class
 
-# hadoop jar count.jar CountHits /user/counthits/input/head /user/counthits/output
+hdfs dfs -rm -r $OUTPUT_PATH
+hadoop jar $JAR_NAME $MAIN_CLASS_NAME $INPUT_PATH/$INPUT_FILE_NAME $OUTPUT_PATH 
 
-hadoop jar count.jar CountHits /user/counthits/input/NASA_access_log_Jul95 /user/counthits/output
-
-rm -r output
-hdfs dfs -get /user/counthits/output .
+rm -r ./output
+hdfs dfs -get $OUTPUT_PATH .
+cat ./output/part-r-00000
