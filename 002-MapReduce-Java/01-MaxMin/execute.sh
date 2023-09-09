@@ -1,12 +1,12 @@
 hdfs dfs -mkdir /user
 hdfs dfs -mkdir /user/mapreduce
-hdfs dfs -mkdir /user/mapreduce/ex00
-hdfs dfs -mkdir /user/mapreduce/ex00/input
+hdfs dfs -mkdir /user/mapreduce/ex01
+hdfs dfs -mkdir /user/mapreduce/ex01/input
 
 
 INPUT_FILE_NAME="*.op"
-INPUT_PATH="/user/mapreduce/ex03/input/datas"
-OUTPUT_PATH="/user/mapreduce/ex03/output"
+INPUT_PATH="/user/mapreduce/ex01/input"
+OUTPUT_PATH="/user/mapreduce/ex01/output"
 DATA_SOURCE_PATH="./datas"
 MAIN_JAVA_FILE_NAME="MaxMin.java"
 MAIN_CLASS_NAME="MaxMin"
