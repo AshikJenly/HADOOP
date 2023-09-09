@@ -6,8 +6,8 @@ hdfs dfs -mkdir /user/mapreduce/ex00/input
 
 INPUT_FILE_NAME="*"
 
-INPUT_PATH="/user/mapreduce/ex03/input/datas"
-OUTPUT_PATH="/user/mapreduce/ex03/output"
+INPUT_PATH="/user/mapreduce/ex00/input/datas"
+OUTPUT_PATH="/user/mapreduce/ex00/output"
 DATA_SOURCE_PATH="./datas"
 MAIN_JAVA_FILE_NAME="WordCount.java"
 MAIN_CLASS_NAME="WordCount"
