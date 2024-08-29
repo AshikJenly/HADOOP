@@ -28,7 +28,7 @@ function install_hadoop(){
         cd ~
         # wget https://archive.apache.org/dist/hadoop/common/$hadoopVersion/$hadoopVersion.tar.gz
         tar -xzvf $hadoopVersion.tar.gz
-        sudo mv $hadoopVersion/usr/local/hadoop
+        # sudo mv $hadoopVersion/usr/local/hadoop
         clear
         echo "Hadoop Installed Successfully"
     fi
